@@ -58,15 +58,12 @@ class _ScrollWithTabsScreenState extends State<ScrollWithTabsScreen> {
             }),
             body: const TabBarView(children: [
               CustomTabWithTitle(
-                title: 'First tab',
                 itemsCount: 10,
               ),
               CustomTabWithTitle(
-                title: 'Second tab',
                 itemsCount: 50,
               ),
               CustomTabWithTitle(
-                title: 'Third tab',
                 itemsCount: 20,
               ),
             ]),
@@ -81,9 +78,8 @@ class _ScrollWithTabsScreenState extends State<ScrollWithTabsScreen> {
 ///
 /// * [itemsCount] used to decide how much elements to display in a Grid. 10 by default.
 class CustomTabWithTitle extends StatelessWidget {
-  const CustomTabWithTitle({this.title, this.itemsCount = 10, super.key});
+  const CustomTabWithTitle({this.itemsCount = 10, super.key});
 
-  final String? title;
   final int itemsCount;
 
   @override
