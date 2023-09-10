@@ -33,25 +33,36 @@ class _ScrollWithTabsScreenState extends State<ScrollWithTabsScreen> {
                 const Hbox(20.0),
                 // Place holder text
                 const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
-                        'Ellentesque eget tincidunt est. Phasellus placerat id urna vitae cursus. Sed efficitur turpis nibh, eget facilisis risus facilisis ut. Suspendisse ac quam vel lacus faucibus porta. Mauris pretium diam et risus pretium fringilla. Donec sagittis, nibh id elementum elementum, odio eros dapibus augue, finibus dignissim lectus odio id felis. Morbi ac elit risus. Vestibulum feugiat lobortis enim quis tristique. Ut posuere, nulla non tristique posuere, enim magna bibendum dolor, cursus pulvinar metus sem id orci. Fusce at ligula consequat nibh vestibulum tristique nec eu lorem. Proin ligula nibh, convallis non ex porta, vehicula gravida erat. Ut vitae cursus lorem. Morbi ac eros eu ipsum imperdiet ornare. Integer non pulvinar odio. Fusce aliquet hendrerit ullamcorper. Pellentesque ut semper nunc. '),
+                  child: ColoredBox(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Text(
+                          'Ellentesque eget tincidunt est. Phasellus placerat id urna vitae cursus. Sed efficitur turpis nibh, eget facilisis risus facilisis ut. Suspendisse ac quam vel lacus faucibus porta. Mauris pretium diam et risus pretium fringilla. Donec sagittis, nibh id elementum elementum, odio eros dapibus augue, finibus dignissim lectus odio id felis. Morbi ac elit risus. Vestibulum feugiat lobortis enim quis tristique. Ut posuere, nulla non tristique posuere, enim magna bibendum dolor, cursus pulvinar metus sem id orci. Fusce at ligula consequat nibh vestibulum tristique nec eu lorem. Proin ligula nibh, convallis non ex porta, vehicula gravida erat. Ut vitae cursus lorem. Morbi ac eros eu ipsum imperdiet ornare. Integer non pulvinar odio. Fusce aliquet hendrerit ullamcorper. Pellentesque ut semper nunc. '),
+                    ),
                   ),
                 ),
                 const Hbox(20.0),
-                SliverToBoxAdapter(
-                  child: TabBar(
-                    labelColor: Theme.of(context).primaryColor,
-                    unselectedLabelColor: Colors.black,
-                    labelPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                    indicatorWeight: 3.0,
-                    tabs: const [
-                      Text('Tab 1'),
-                      Text('Tab 2'),
-                      Text('Tab 3'),
-                    ],
+                // Makes [TabBar] to always persist on screen
+                SliverPersistentHeader(
+                  delegate: _SliverTabBarDelegate(
+                    TabBar(
+                      labelColor: Theme.of(context).primaryColor,
+                      unselectedLabelColor: Colors.black,
+                      labelPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                      indicator: UnderlineTabIndicator(
+                          borderSide: BorderSide(
+                              width: 2.0,
+                              color: Theme.of(context).primaryColor),
+                          insets: const EdgeInsets.symmetric(horizontal: 16.0)),
+                      tabs: const [
+                        Text('Tab 1'),
+                        Text('Tab 2'),
+                        Text('Tab 3'),
+                      ],
+                    ),
                   ),
+                  pinned: true,
                 ),
                 const Hbox(10.0),
               ];
@@ -98,5 +109,34 @@ class CustomTabWithTitle extends StatelessWidget {
         );
       }),
     );
+  }
+}
+
+/// Custom [SliverPersistentHeaderDelegate] which is used to create correct [TabBar].
+///
+/// Issue with [pinned] = true solved by using [Alignment.center].
+/// Color of [TabBar] will be the same as [Scaffold] background color.
+class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverTabBarDelegate(this.tabBar);
+
+  final TabBar tabBar;
+
+  @override
+  double get minExtent => tabBar.preferredSize.height;
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return ColoredBox(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: Align(alignment: Alignment.center, child: tabBar));
+  }
+
+  @override
+  bool shouldRebuild(_SliverTabBarDelegate oldDelegate) {
+    return false;
   }
 }
